@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #_*_ coding : utf8 _*_
+# Backup all databases in MySQL.
 
-import os,sys,time
+import os,time
 
 USERNAME = 'root'
 PASSWORD = 'root'
