@@ -1,0 +1,26 @@
+#!/usr/bin/awk -f
+# VERSION: 1.0
+#
+# DATE: 2016/01/15
+#
+# AUTHOR: jabba
+#
+# DESCRIPTION: 统计data.txt文件中每小时创建账号的数量。
+
+BEGIN{
+	FS="[\t /:]";
+	printf("date hour count\n");
+}
+
+{
+	date[$4, $5]++;
+}
+
+END{
+	for(i in date)
+	{
+		split(i, ar, SUBSEP);
+		printf("%s %s %s\n", ar[1], ar[2], date[i]);
+		#printf("%s\n", i)
+	}
+}
