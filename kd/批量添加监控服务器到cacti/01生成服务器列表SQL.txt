@@ -1,0 +1,9 @@
+select distinct concat(case when a.tenanttype=1 then 'K3Cloud-M-' else 'K3Cloud-S-' end, a.hostaddress, '_', a.hostaddress)
+from t_sys_tenant a
+where tenantstatus='Õý³£'
+and hostaddress not like '10.130.6.7910.130.6.79:443;'
+and not exists(
+	select 1 from cacti.host b
+	where a.hostaddress=b.hostname
+)
+order by 1

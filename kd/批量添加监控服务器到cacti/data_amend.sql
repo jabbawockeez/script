@@ -1,0 +1,49 @@
+delete 
+FROM graph_templates_graph
+where graph_template_id in (
+	select id from graph_templates
+		where name='Host MIB - Multi CPU Utilization on 2 Processor Box'
+		)
+and title_cache like 'K3Cloud-% - CPU Utilization - CPU%'
+;
+
+
+drop table temp_graphid;
+
+create table temp_graphid as
+select distinct a.local_graph_id
+FROM graph_templates_graph a, graph_templates_item b
+WHERE a.title LIKE '|host_description| - 2 CPU Utilization'
+and a.title_cache like 'K3Cloud%'
+and a.local_graph_id=b.local_graph_id          
+and b.task_item_id=0;
+
+
+drop table temp_graph_taskitem;
+
+create table temp_graph_taskitem as
+select a.local_graph_id,max(b.task_item_id) task_item_id
+FROM graph_templates_graph a, graph_templates_item b
+WHERE a.title LIKE '|host_description| - 2 CPU Utilization'
+and a.title_cache like 'K3Cloud%'
+and a.local_graph_id=b.local_graph_id
+and exists(select 1 from temp_graphid c where a.local_graph_id=c.local_graph_id)
+group by a.local_graph_id;
+
+
+update graph_templates_item set task_item_id=(select task_item_id + 1 from temp_graph_taskitem where graph_templates_item.local_graph_id=temp_graph_taskitem.local_graph_id)
+where sequence between 1 and 8
+and exists(
+select 1 from temp_graph_taskitem where graph_templates_item.local_graph_id=temp_graph_taskitem.local_graph_id
+);
+
+update graph_templates_item set task_item_id=(select task_item_id + 2 from temp_graph_taskitem where graph_templates_item.local_graph_id=temp_graph_taskitem.local_graph_id)
+where sequence between 9 and 12
+and exists(
+select 1 from temp_graph_taskitem where graph_templates_item.local_graph_id=temp_graph_taskitem.local_graph_id
+);
+
+
+
+
+

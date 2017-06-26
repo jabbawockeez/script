@@ -1,0 +1,7 @@
+1、添加多租户服务器
+sh ./cacti_multi.sh
+
+2、添加单租户服务器
+sh ./cacti_single.sh
+
+
