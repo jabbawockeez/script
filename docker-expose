@@ -1,5 +1,6 @@
 #!/bin/bash
 # filename: docker_expose.sh
+# description: dynamically open/close a port after a container has started using iptables.
 
 if [ `id -u` -ne 0 ];then
     echo "[EROOR] Please use root to run this script"
